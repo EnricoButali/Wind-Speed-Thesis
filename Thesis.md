@@ -82,8 +82,11 @@ protected by the frozen anchors and the framing rules below.
    zero." Under this benchmark P = Q and Track B reduces to `K_var = h × C0`.
 2. **Carr & Lee (2009)** = theoretical motivation for variance-swap replication
    **only**. The implemented formula is **Tol (1997)** `K_var^B = h × C0`. Never
-   title an implemented section "Carr-Lee." *(There is an offending section title
-   in the Dataset B Phase 6 `.tex` — see NB below.)*
+   title an implemented section "Carr-Lee." *(The Dataset B Phase 6 `.tex` violates
+   this at the **document `\title{}` level**, not just a section heading — see
+   NB below. Track the title fix and the section-heading fix as one edit, but
+   verify both, since fixing only the visible heading leaves the PDF/running-header
+   title wrong.)*
 3. **1.931× height correction** `((100/10)^(2/7))` appears **only** in the
    Value-of-Information comparison (Ch 3), nowhere else.
 4. **Track A vs Track B units:** Track A = 252×-annualised realised variance;
@@ -283,18 +286,34 @@ The RAship produced 14 phase documents (7 phases × 2 datasets). Most are comple
 LaTeX style of the existing phase chapters (graybox / litbox / darkblue-midblue),
 now switched to the Times / cartella editorial spec above.
 
+0. **FIX — Bibliography, Phase 1 & Phase 2 (do this before drafting Chapter 1).**
+   Small, mechanical, but not optional — see NB below for the full diagnosis. Two
+   `\bibitem` blocks currently contain the wrong paper's content; the correct
+   content already exists verbatim in four sibling files. This is a ~10-minute
+   copy-paste fix with zero new research required, and it directly repairs the
+   citation underpinning the AR(4)↔CAR(4) Euler-discretisation claim planned for
+   **Ch 2 §2.4** — treat it as a correctness fix, not bibliography hygiene.
+   Track separately from job 2's Carr-Lee title/heading fix (different files).
+
 1. **CREATE — Dataset A, Phase 5.** `benchmark_latex/phase5/` is empty (only a
    `.gitkeep`); no `.tex`, no PDF. Write it from
    `benchmark_notebooks/phase5/PHASE_5.ipynb`. Anchors already exist (Feller 27.9×,
    CIR κ_V=0.0165, v̄=0.608, ξ²≈4.8e−5). → unblocks **Ch 2 §2.5 Dataset A column**.
-   *This is the only true void.*
+   *This is the only true void.* Note: this is the single **CREATE** job (write
+   from nothing) versus jobs 2–3 which are **EXPAND** (grow an existing skeleton);
+   it gates Chapter 2, the largest single chapter (~35–40 pp) — if drafting runs
+   long, decide the fallback (e.g. ship Ch 2 without §2.5 and backfill) rather than
+   blocking the whole chapter's delivery.
 
 2. **EXPAND — Dataset B, Phase 6.** `reference_tex/Phase_6/PHASE_6_Analysis.tex`
    is a compact draft (~220 lines vs 297–425 for sibling B chapters). Build it to
-   full depth. **Also retitle** the section currently named
-   "Carr-Lee Variance Swap Framework (Dataset B)" → e.g. "Synthetic Wind Variance
-   Swap Framework (Dataset B)" (framing rule 2). Notebook + CSVs are present.
-   → unblocks **Ch 3 §3.1 Dataset B**.
+   full depth. **Also retitle** — at **both** the document `\title{}` ("Phase 6:
+   Carr-Lee Variance Swap Pricing") **and** the section heading currently named
+   "Carr-Lee Variance Swap Framework (Dataset B)" — → e.g. "Synthetic Wind Variance
+   Swap Framework (Dataset B)" (framing rule 2). There is also a `\bibitem{CarrLee:2009}`
+   in this file; keep it (Carr-Lee remains a valid citation for the motivation
+   section) but make sure no heading implies it is the implemented model.
+   Notebook + CSVs are present. → unblocks **Ch 3 §3.1 Dataset B**.
 
 3. **EXPAND — Dataset B, Phase 7.** `reference_tex/Phase_7/PHASE_7_Analysis.tex`
    is a compact draft (~244 lines). Build to full depth. CSVs present
@@ -303,28 +322,60 @@ now switched to the Times / cartella editorial spec above.
 
 **Also note:** Dataset A Phases 1–4 exist only as **compiled PDFs** (no `.tex`
 committed in `benchmark_latex/phase1..4`). When writing the Dataset A columns of
-Ch 2, draw content from those PDFs + the CSVs. Dataset A Phases 6–7 have full `.tex`.
+Ch 2, draw content from those PDFs + the CSVs — do not silently re-round a number
+that differs from a frozen `CLAUDE.md` anchor; if a PDF figure and a CSV/anchor
+disagree, the anchor wins and the discrepancy should be flagged, not merged away.
+Dataset A Phases 6–7 have full `.tex`.
 
-**Sequencing:** Chapter 1 and Chapter 2 §§2.1–2.4 are fully unblocked → draft first.
-Only §2.5 (A) is gated by job 1. Chapter 3's Dataset B half is gated by jobs 2–3.
-Recommended order: **Chapter 1 → job 1 (create A-Phase 5) → Chapter 2 →
-jobs 2–3 (expand B-Phase 6/7) → Chapter 3.**
+**Sequencing:** job 0 (bibliography fix) comes **before** Chapter 1, since Ch 1
+§1.3 is the literature review — the first place a wrongly-bound citation would
+surface in submitted text. Chapter 1 and Chapter 2 §§2.1–2.4 are otherwise fully
+unblocked → draft first. Only §2.5 (A) is gated by job 1. Chapter 3's Dataset B
+half is gated by jobs 2–3. Recommended order: **job 0 (bibliography fix) →
+Chapter 1 → job 1 (create A-Phase 5) → Chapter 2 → jobs 2–3 (expand B-Phase 6/7,
+incl. Carr-Lee title/heading fix) → Chapter 3.**
 
 ---
 
 # NB — Bibliography cleanup
 
-- **Benth & Šaltytė Benth (2009)** — *Dynamic pricing of wind futures*, Energy
-  Economics **31**, 16–24. The file is named "Benth (2008)" (submission year); the
-  **published year is 2009** → cite as 2009. This is the core CAR(4)/Euler /
-  Samuelson-effect reference. Present in `papers/`.
-- The existing chapters cite this paper under **two duplicate BibTeX keys**
-  (`SaltyteBenth2009` and `BenthSaltyteBenth2009`) → merge into one key.
-- Fix a stray author initial ("Šaltytė Benth, **A.**" → "**J.**" for Jūratė).
-- A separate **Šaltytė Benth & Benth (2008)** temperature paper (*Stochastic
-  modelling of temperature variations…*, Applied Mathematical Finance 15) is cited
-  in the bib but is **not physically in `papers/`** → either source the PDF or drop
-  the citation. Decide before finalising Chapter 1.
+**Verified (via `pdftotext` header extraction of the actual PDF, not just the
+filename) — the wind-futures source paper is present and correctly identified:**
+`papers/Benth (2008) - Dynamic pricing of wind future.pdf` opens with
+*"Energy Economics 31 (2009) 16–24 … Dynamic pricing of wind futures … Fred Espen
+Benth, Jūratė Šaltytė Benth."* The "(2008)" in the filename is the
+acceptance/submission date; the journal publication date is **2009** — cite as
+Benth & Šaltytė Benth (2009). This is the core CAR(4)/Euler / Samuelson-effect
+reference. **No source paper is missing.**
+
+**The actual bug — wrong content under the citation key, not a missing file:**
+`reference_tex/Phase_1/PH1_Analysis.tex:325-326` (key `SaltyteBenth2009`) and
+`reference_tex/Phase_2/PH2_Analysis.tex:287-288` (key `BenthSaltyteBenth2009`)
+both contain the **wrong paper's** `\bibitem` content — the title, journal, and
+author initial of a *different*, temperature-focused paper ("Šaltytė Benth, **A.**
+… *Stochastic modelling of temperature variations with applications to weather
+derivatives and risk management*"), not the wind-futures paper their surrounding
+prose actually cites. `reference_tex/Phase_4/PH4_Analysis.tex:348`,
+`Phase_5/PH5_Analysis.tex:421`, `Phase_6/PHASE_6_Analysis.tex:210`, and
+`Phase_7/PHASE_7_Analysis.tex:234` all already have the **correct** entry
+("Benth, F. E., & Šaltytė Benth, J. (2009). *Dynamic pricing of wind futures*.
+*Energy Economics*, 31(1), 16–24.").
+
+**Fix (job 0 above — do before Chapter 1):** replace the two wrong `\bibitem`
+blocks in Phase 1 and Phase 2 with the correct entry, copied verbatim from
+Phase 4/5/6/7. This is a content swap, not a "merge two duplicate keys" cleanup —
+each independent phase bibliography must be checked by content, not assumed
+equivalent because the keys are similar. This also matters beyond the reference
+list: Phase 2's citation under this key backs the AR(4)→CAR(4) Euler-discretisation
+claim planned for **Ch 2 §2.4** — a wrong citation there is a repairable but real
+gap in that claim's evidentiary basis, not cosmetic.
+
+**Separate, still-open item (unaffected by the above):** a genuinely different
+paper — **Šaltytė Benth & Benth (2008)**, *Stochastic modelling of temperature
+variations…*, Applied Mathematical Finance 15 — is cited (correctly, as its own
+entry) in `Phase_3/PH3_Analysis.tex:287` and `Phase_4/PH4_Analysis.tex:360`, but
+has **no PDF in `papers/`**. Decide before finalising Chapter 1: source the PDF,
+or drop the citation.
 
 ---
 
